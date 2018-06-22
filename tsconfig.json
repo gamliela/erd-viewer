@@ -7,7 +7,11 @@
     "target": "es6",
     "module": "es6",
     "moduleResolution": "node",
-    "outDir": "generated"
+    "outDir": "generated",
+    "lib": [
+      "dom",
+      "es2017"
+    ]
   },
   "files": [
     "./config/typescript.config.ts"

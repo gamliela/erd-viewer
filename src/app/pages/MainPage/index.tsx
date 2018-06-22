@@ -1,26 +1,22 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import {AppManager} from "../../AppManager";
 import styled from "styled-components";
+import buildEntityRelationGraph from "../../models/erd/EntityRelationGraphFactory";
+import DiagramModel from "../../components/diagram/DiagramModel";
+import Diagram from "../../components/diagram/Diagram";
 
-const Header = styled.h1`
-  color: blue;
+const diagramModel = new DiagramModel(buildEntityRelationGraph());
+
+const StyledDiagram = styled(Diagram)`
+  width: 100%
 `;
 
-export interface MainPageProps {
-  appManager: AppManager;
-}
-
 @observer
-export default class MainPage extends React.Component<MainPageProps> {
+export default class MainPage extends React.Component {
   render() {
-    const appManager = this.props.appManager;
     return (
-      <div>
-        <Header>
-          Hello World!
-        </Header>
-        <span>version: {appManager.version}</span>
+      <div className="container">
+        <StyledDiagram model={diagramModel}/>
       </div>
     );
   }
