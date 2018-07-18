@@ -3,6 +3,7 @@ import {observer} from "mobx-react";
 import styled from "styled-components";
 import DiagramModel, {BASE_VIEWPORT_HEIGHT, BASE_VIEWPORT_WIDTH} from "./DiagramModel";
 import Node from "./Node";
+import Link from "./Link";
 
 const Svg = styled.svg`
   width: 100%;
@@ -26,7 +27,7 @@ class Diagram extends React.Component<{ model: DiagramModel }> {
   }
 
   renderLinks() {
-
+    return this.props.model.links.map(link => <Link key={link.key} link={link}/>)
   }
 }
 

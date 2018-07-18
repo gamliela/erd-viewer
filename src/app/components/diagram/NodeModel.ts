@@ -1,7 +1,8 @@
 import Entity from "../../models/erd/Entity";
 import {observable} from "mobx";
+import {SimulationNodeDatum} from "d3-force";
 
-class NodeModel {
+class NodeModel implements SimulationNodeDatum {
   @observable x = 0;
   @observable y = 0;
 

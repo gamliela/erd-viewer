@@ -14,8 +14,16 @@ class DiagramModel {
   simulationModel: SimulationModel;
 
   constructor(graph: EntityRelationGraph) {
-    this.nodes = graph.entities.map(entity => new NodeModel(entity));
-    this.links = graph.relations.map(relation => new LinkModel(relation));
+    // create a temporary map from given entity ids to new node models
+    const entityToNodeMap = graph.entities.reduce((map: any, entity) => {
+      map[entity.id] = new NodeModel(entity);
+      return map;
+    }, {});
+
+    this.nodes = Object.values(entityToNodeMap);
+    this.links = graph.relations.map(relation => {
+      return new LinkModel(entityToNodeMap[relation.source.id], entityToNodeMap[relation.target.id]);
+    });
     this.simulationModel = new SimulationModel(this.nodes);
   }
 
