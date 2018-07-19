@@ -24,7 +24,7 @@ class DiagramModel {
     this.links = graph.relations.map(relation => {
       return new LinkModel(entityToNodeMap[relation.source.id], entityToNodeMap[relation.target.id]);
     });
-    this.simulationModel = new SimulationModel(this.nodes);
+    this.simulationModel = new SimulationModel(this.nodes, this.links);
   }
 
   @computed get viewportWidth() {
