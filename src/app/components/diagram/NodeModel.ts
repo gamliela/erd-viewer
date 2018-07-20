@@ -12,6 +12,10 @@ class NodeModel implements SimulationNodeDatum {
   get key() {
     return this.entity.id;
   }
+
+  onSVGDrag(x, y) {
+    console.log(`${x}, ${y}`);
+  }
 }
 
 export default NodeModel;
