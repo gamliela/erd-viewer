@@ -13,8 +13,16 @@ class NodeModel implements SimulationNodeDatum {
     return this.entity.id;
   }
 
+  onSVGDragStarted(x, y) {
+    console.log(`Drag started: ${x}, ${y}`);
+  }
+
   onSVGDrag(x, y) {
-    console.log(`${x}, ${y}`);
+    console.log(`Dragging: ${x}, ${y}`);
+  }
+
+  onSVGDragEnded() {
+    console.log(`Drag ended!`);
   }
 }
 

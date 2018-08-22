@@ -12,7 +12,8 @@ const DraggableStyledNode = withDraggableModel(StyledNode);
 
 function Node({node}: { node: NodeModel }) {
   return (
-    <DraggableStyledNode r="1" cx={node.x} cy={node.y} onSVGDrag={node.onSVGDrag}>
+    <DraggableStyledNode r="1" cx={node.x} cy={node.y} onSVGDragStarted={node.onSVGDragStarted}
+                         onSVGDrag={node.onSVGDrag} onSVGDragEnded={node.onSVGDragEnded}>
     </DraggableStyledNode>
   );
 }

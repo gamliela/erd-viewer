@@ -4,7 +4,9 @@ import {SVGProps} from "react";
 // TODO: add a display name and hoist statics
 
 interface WithDraggableSVGProps {
+  onSVGDragStarted?: (x, y) => void;
   onSVGDrag?: (x, y) => void;
+  onSVGDragEnded?: () => void;
 }
 
 type WithDraggableSVGState = {
@@ -47,9 +49,12 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
     onMouseDown(event) {
       const element = event.target;
       const offset = getMousePosition(element, event);
-      offset.x -= getXAttribute(element);
-      offset.y -= getYAttribute(element);
+      const elementX = getXAttribute(element);
+      const elementY = getYAttribute(element);
+      offset.x -= elementX;
+      offset.y -= elementY;
       this.setState({dragging: true, offset});
+      this.props.onSVGDragStarted && this.props.onSVGDragStarted(elementX, elementY);
     }
 
     onMouseMove(event) {
@@ -62,7 +67,10 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
     }
 
     onMouseUpOrLeave() {
-      this.setState({dragging: false})
+      if (this.state.dragging) {
+        this.setState({dragging: false});
+        this.props.onSVGDragEnded && this.props.onSVGDragEnded();
+      }
     }
 
     render() {
