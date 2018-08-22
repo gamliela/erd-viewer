@@ -17,7 +17,7 @@ type WithDraggableSVGState = {
   }
 }
 
-function getMousePosition(svg, event) {
+function getPointerPosition(svg, event) {
   const CTM = svg.getScreenCTM();
   return {
     x: (event.clientX - CTM.e) / CTM.a,
@@ -37,18 +37,19 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
   class WithDraggableSVG extends React.Component<P & WithDraggableSVGProps, WithDraggableSVGState> {
     constructor(props) {
       super(props);
-      this.onMouseDown = this.onMouseDown.bind(this);
-      this.onMouseMove = this.onMouseMove.bind(this);
-      this.onMouseUpOrLeave = this.onMouseUpOrLeave.bind(this);
+      this.onPointerDown = this.onPointerDown.bind(this);
+      this.onPointerMove = this.onPointerMove.bind(this);
+      this.onPointerUpOrLeave = this.onPointerUpOrLeave.bind(this);
       this.state = {
         dragging: false,
         offset: {x: 0, y: 0}
       };
     }
 
-    onMouseDown(event) {
+    onPointerDown(event) {
       const element = event.target;
-      const offset = getMousePosition(element, event);
+      element.setPointerCapture(event.pointerId);
+      const offset = getPointerPosition(element, event);
       const elementX = getXAttribute(element);
       const elementY = getYAttribute(element);
       offset.x -= elementX;
@@ -57,16 +58,16 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
       this.props.onSVGDragStarted && this.props.onSVGDragStarted(elementX, elementY);
     }
 
-    onMouseMove(event) {
+    onPointerMove(event) {
       if (this.state.dragging) {
         const element = event.target;
         event.preventDefault();
-        const coord = getMousePosition(element, event);
+        const coord = getPointerPosition(element, event);
         this.props.onSVGDrag && this.props.onSVGDrag(coord.x - this.state.offset.x, coord.y - this.state.offset.y);
       }
     }
 
-    onMouseUpOrLeave() {
+    onPointerUpOrLeave() {
       if (this.state.dragging) {
         this.setState({dragging: false});
         this.props.onSVGDragEnded && this.props.onSVGDragEnded();
@@ -75,10 +76,10 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
 
     render() {
       return <Component
-        onMouseDown={this.onMouseDown}
-        onMouseMove={this.onMouseMove}
-        onMouseUp={this.onMouseUpOrLeave}
-        onMouseLeave={this.onMouseUpOrLeave}
+        onPointerDown={this.onPointerDown}
+        onPointerMove={this.onPointerMove}
+        onPointerUp={this.onPointerUpOrLeave}
+        onPointerLeave={this.onPointerUpOrLeave}
         {...this.props}
       />;
     }
