@@ -11,12 +11,12 @@ class DiagramModel {
   zoomFactor: number = 1;
   @observable nodes: NodeModel[];
   @observable links: LinkModel[];
-  simulationModel: SimulationModel;
+  public readonly simulationModel = new SimulationModel();
 
   constructor(graph: EntityRelationGraph) {
     // create a temporary map from given entity ids to new node models
     const entityToNodeMap = graph.entities.reduce((map: any, entity) => {
-      map[entity.id] = new NodeModel(entity);
+      map[entity.id] = new NodeModel(entity, this.simulationModel);
       return map;
     }, {});
 
@@ -24,7 +24,7 @@ class DiagramModel {
     this.links = graph.relations.map(relation => {
       return new LinkModel(entityToNodeMap[relation.source.id], entityToNodeMap[relation.target.id]);
     });
-    this.simulationModel = new SimulationModel(this.nodes, this.links);
+    this.simulationModel.init(this.nodes, this.links);
   }
 
   @computed get viewportWidth() {
