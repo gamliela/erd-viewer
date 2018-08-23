@@ -2,20 +2,36 @@ import * as React from "react";
 import {observer} from "mobx-react";
 import styled from "styled-components";
 import NodeModel from "./NodeModel";
-import withDraggableModel from "../../../shared_modules/DraggableSVG";
+import withDraggableSVG from "../../../shared_modules/DraggableSVG";
 
-const StyledNode = styled.circle`
-  cursor: move
+const CircleSVG = styled.circle`
 `;
 
-const DraggableStyledNode = withDraggableModel(StyledNode);
+const TextSVG = styled.text`
+  text-anchor: middle;
+  alignment-baseline: ideographic;
+  font-size: 2px;
+`;
 
-function Node({node}: { node: NodeModel }) {
-  return (
-    <DraggableStyledNode r="1" cx={node.x} cy={node.y} onSVGDragStarted={node.onSVGDragStarted}
-                         onSVGDrag={node.onSVGDrag} onSVGDragEnded={node.onSVGDragEnded}>
-    </DraggableStyledNode>
-  );
+const GSVG = styled.g`
+  cursor: move;
+`;
+
+const DraggableGroup = withDraggableSVG(GSVG);
+
+@observer
+class Node extends React.Component<{ node: NodeModel }> {
+  render() {
+    const {node} = this.props;
+    return (
+      <DraggableGroup onSVGDragStarted={node.onSVGDragStarted}
+                      onSVGDrag={node.onSVGDrag}
+                      onSVGDragEnded={node.onSVGDragEnded}>
+        <CircleSVG r="1" cx={node.x} cy={node.y}/>
+        <TextSVG x={node.x} y={node.y - 1}>Text</TextSVG>
+      </DraggableGroup>
+    );
+  }
 }
 
 export default observer(Node);
