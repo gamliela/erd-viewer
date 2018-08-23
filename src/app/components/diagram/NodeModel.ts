@@ -18,7 +18,6 @@ class NodeModel implements SimulationNodeDatum {
 
   @action.bound
   onSVGDragStarted(x, y) {
-    console.log(`Drag started: ${x}, ${y}`);
     this.simulationModel.notifyDragStarted();
     this.fx = x;
     this.fy = y;
@@ -26,14 +25,12 @@ class NodeModel implements SimulationNodeDatum {
 
   @action.bound
   onSVGDrag(x, y) {
-    console.log(`Dragging: ${x}, ${y}`);
     this.fx = x;
     this.fy = y;
   }
 
   @action.bound
   onSVGDragEnded() {
-    console.log(`Drag ended!`);
     this.simulationModel.notifyDragEnded();
     this.fx = null;
     this.fy = null;
