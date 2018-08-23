@@ -82,7 +82,7 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.React
         onPointerUp={this.onPointerUpOrLeave}
         onPointerLeave={this.onPointerUpOrLeave}
         {...wrappedProps}
-      />  // children render is not required here (why?)
+      />  // children are passed in wrapperProps
     }
   };
 
