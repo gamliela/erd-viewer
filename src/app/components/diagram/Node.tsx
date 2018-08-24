@@ -28,7 +28,7 @@ class Node extends React.Component<{ node: NodeModel }> {
                       onSVGDrag={node.onSVGDrag}
                       onSVGDragEnded={node.onSVGDragEnded}>
         <CircleSVG r="1" cx={node.x} cy={node.y}/>
-        <TextSVG x={node.x} y={node.y - 1}>Text</TextSVG>
+        <TextSVG x={node.x} y={node.y - 1}>{node.name}</TextSVG>
       </DraggableGroup>
     );
   }

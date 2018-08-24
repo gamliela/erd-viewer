@@ -1,4 +1,3 @@
-import Entity from "../../models/erd/Entity";
 import {action, observable} from "mobx";
 import {SimulationNodeDatum} from "d3-force";
 import SimulationModel from "./SimulationModel";
@@ -9,11 +8,9 @@ class NodeModel implements SimulationNodeDatum {
   @observable fx = null;
   @observable fy = null;
 
-  constructor(public entity: Entity, private simulationModel: SimulationModel) {
-  }
-
-  get key() {
-    return this.entity.id;
+  constructor(public key: number,
+              public name: string,
+              private simulationModel: SimulationModel) {
   }
 
   @action.bound
