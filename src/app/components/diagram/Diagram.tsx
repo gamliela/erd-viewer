@@ -6,6 +6,7 @@ import Node from "./Node";
 import Link from "./Link";
 
 const Svg = styled.svg`
+  user-select: none;
   width: 100%;
 `;
 
