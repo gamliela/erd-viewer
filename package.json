@@ -1,8 +1,8 @@
 {
-  "name": "starter-react-mobx-styled-components",
+  "name": "erd-viewer",
   "version": "1.0.0",
   "main": "src/index.jsx",
-  "repository": "https://github.com/gamliela/starter-react-mobx-styled-components.git",
+  "repository": "https://github.com/gamliela/erd-viewer",
   "author": "Alon Gamliel <alon@gamliela.com>",
   "license": "Apache-2.0",
   "scripts": {
@@ -12,8 +12,8 @@
   "dependencies": {
     "bulma": "0.7.1",
     "d3-force": "^1.1.0",
-    "mobx": "5.0.3",
-    "mobx-react": "5.2.3",
+    "mobx": "5.1.2",
+    "mobx-react": "5.2.8",
     "react": "16.4.1",
     "react-dom": "16.4.1",
     "styled-components": "3.3.3"
