@@ -15,7 +15,7 @@ class DiagramModel {
 
   constructor(graph: DotGraph) {
     this.nodes = graph.objects.map((obj, index) => new NodeModel(index, obj.name, this.simulationModel));
-    this.links = graph.edges.map(edge => new LinkModel(this.nodes[edge.tail], this.nodes[edge.head]));
+    this.links = graph.edges.map((edge, index) => new LinkModel(index, this.nodes[edge.tail], this.nodes[edge.head]));
     this.simulationModel.init(this.nodes, this.links);
   }
 
