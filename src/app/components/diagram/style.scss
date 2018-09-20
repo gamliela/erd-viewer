@@ -1,0 +1,20 @@
+.Diagram {
+  user-select: none;
+  width: 100%;
+}
+
+.Node {
+  cursor: move;
+
+  text {
+    text-anchor: middle;
+    alignment-baseline: ideographic;
+    font-size: 2px;
+  }
+}
+
+.Link {
+  pointer-events: none;
+  stroke: black;
+  stroke-width: 0.1;
+}

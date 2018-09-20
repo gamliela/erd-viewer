@@ -3,7 +3,7 @@ import {SVGProps} from "react";
 
 // TODO: add a display name and hoist statics
 
-interface WithDraggableSVGProps {
+interface WithDraggableSVGProps extends React.SVGProps<SVGElement> {
   onSVGDragStarted?: (x, y) => void;
   onSVGDrag?: (x, y) => void;
   onSVGDragEnded?: () => void;

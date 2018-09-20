@@ -1,10 +1,10 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import styled from "styled-components";
 import withDraggableSVG from "../../shared_modules/DraggableSVG";
 import {action, computed, observable} from "mobx";
 import {SimulationNodeDatum} from "d3-force";
 import Simulation from "./Simulation";
+import style from "./style.scss";
 
 function round(p, n) {
   return p % n < n / 2 ? p - (p % n) : p + n - (p % n);
@@ -51,31 +51,19 @@ class NodeModel implements SimulationNodeDatum {
   }
 }
 
-const CircleSVG = styled.circle`
-`;
-
-const TextSVG = styled.text`
-  text-anchor: middle;
-  alignment-baseline: ideographic;
-  font-size: 2px;
-`;
-
-const GSVG = styled.g`
-  cursor: move;
-`;
-
-const DraggableGroup = withDraggableSVG(GSVG);
+const DraggableGroup = withDraggableSVG("g");
 
 @observer
 class Node extends React.Component<{ node: NodeModel }> {
   render() {
     const {node} = this.props;
     return (
-      <DraggableGroup onSVGDragStarted={node.onSVGDragStarted}
+      <DraggableGroup className={style.Node}
+                      onSVGDragStarted={node.onSVGDragStarted}
                       onSVGDrag={node.onSVGDrag}
                       onSVGDragEnded={node.onSVGDragEnded}>
-        <CircleSVG r="1" cx={node.dx} cy={node.dy}/>
-        <TextSVG x={node.dx} y={node.dy - 1}>{node.name}</TextSVG>
+        <circle r="1" cx={node.dx} cy={node.dy}/>
+        <text x={node.dx} y={node.dy - 1}>{node.name}</text>
       </DraggableGroup>
     );
   }

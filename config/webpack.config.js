@@ -37,9 +37,20 @@ const config = {
         loader: 'url-loader'
       },
       {
-        test: /\.(css)$/,
+        test: /\.(sass|scss)$/,
         include: projectPath,
-        use: ['style-loader', 'css-loader']
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,   // make sure sass-loader is used on imported assets
+              localIdentName: '[local]---[hash:base64:5]'
+            }
+          },
+          'sass-loader'
+        ]
       }
     ]
   },

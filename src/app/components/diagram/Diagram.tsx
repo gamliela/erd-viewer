@@ -1,11 +1,12 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import styled from "styled-components";
 import {DotGraph} from "../../models/erd/dot_json_types";
 import {computed, observable} from "mobx";
 import Simulation from "./Simulation";
 import {Node, NodeModel} from "./Node";
 import {Link, LinkModel} from "./Link";
+import style from "./style.scss";
+import cx from "classnames";
 
 const ROUND_PRECISION = 0.1;
 const BASE_VIEWPORT_WIDTH = 100;
@@ -32,21 +33,17 @@ class DiagramModel {
   }
 }
 
-const Svg = styled.svg`
-  user-select: none;
-  width: 100%;
-`;
-
 @observer
-class Diagram extends React.Component<{ model: DiagramModel }> {
+class Diagram extends React.Component<{ className: string, model: DiagramModel }> {
   render() {
+    const {className} = this.props;
     const viewBoxProp = `-${BASE_VIEWPORT_WIDTH / 2} -${BASE_VIEWPORT_HEIGHT / 2} ${BASE_VIEWPORT_WIDTH} ${BASE_VIEWPORT_HEIGHT}`;
 
     return (
-      <Svg viewBox={viewBoxProp}>
+      <svg className={cx(className, style.Diagram)} viewBox={viewBoxProp}>
         {this.renderNodes()}
         {this.renderLinks()}
-      </Svg>
+      </svg>
     );
   }
 
