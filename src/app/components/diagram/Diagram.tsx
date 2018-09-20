@@ -8,7 +8,7 @@ import {Link, LinkModel} from "./Link";
 import style from "./style.scss";
 import cx from "classnames";
 
-const ROUND_PRECISION = 0.1;
+const GRID_PRECISION = 0.1;
 const BASE_VIEWPORT_WIDTH = 100;
 const BASE_VIEWPORT_HEIGHT = 50;
 
@@ -19,7 +19,7 @@ class DiagramModel {
   public readonly simulationModel = new Simulation();
 
   constructor(graph: DotGraph) {
-    this.nodes = graph.objects.map((obj, index) => new NodeModel(index, obj.name, this.simulationModel, ROUND_PRECISION));
+    this.nodes = graph.objects.map((obj, index) => new NodeModel(index, obj.name, this.simulationModel, GRID_PRECISION));
     this.links = graph.edges.map((edge, index) => new LinkModel(index, this.nodes[edge.tail], this.nodes[edge.head]));
     this.simulationModel.init(this.nodes, this.links);
   }
@@ -34,7 +34,7 @@ class DiagramModel {
 }
 
 @observer
-class Diagram extends React.Component<{ className: string, model: DiagramModel }> {
+class Diagram extends React.Component<{ model: DiagramModel, className?: string }> {
   render() {
     const {className} = this.props;
     const viewBoxProp = `-${BASE_VIEWPORT_WIDTH / 2} -${BASE_VIEWPORT_HEIGHT / 2} ${BASE_VIEWPORT_WIDTH} ${BASE_VIEWPORT_HEIGHT}`;

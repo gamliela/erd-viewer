@@ -39,6 +39,7 @@ const config = {
       {
         test: /\.(sass|scss)$/,
         include: projectPath,
+        exclude: path.join(appPath, 'theme', 'bootstrap.config.scss'),
         use: [
           'style-loader',
           {
@@ -53,10 +54,8 @@ const config = {
         ]
       },
       {
-        // required for external css files, like bootstrap
-        test: /\.css$/,
-        include: projectPath,
-        use: ['style-loader', 'css-loader']
+        include: path.join(appPath, 'theme', 'bootstrap.config.scss'),
+        use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   },

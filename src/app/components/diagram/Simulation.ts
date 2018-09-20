@@ -20,7 +20,7 @@ class Simulation {
     this.simulation = d3.forceSimulation();
     this.simulation
       .nodes(nodes)
-      .force("centering_force", d3.forceCenter())
+      //.force("centering_force", d3.forceCenter())
       .force("charge_force", d3.forceManyBody().strength(CHARGE_FORCE_STRENGTH))
       .force("links_force", d3.forceLink(links).distance(LINK_DISTANCE))
       .force("collide_force", d3.forceCollide().strength(COLLIDE_FORCE_STRENGTH).radius(1.5))
