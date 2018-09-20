@@ -1,6 +1,10 @@
-import {action, observable} from "mobx";
+import {action, computed, observable} from "mobx";
 import {SimulationNodeDatum} from "d3-force";
 import SimulationModel from "./SimulationModel";
+
+function round(p, n) {
+  return p % n < n / 2 ? p - (p % n) : p + n - (p % n);
+}
 
 class NodeModel implements SimulationNodeDatum {
   @observable x = 0;
@@ -10,7 +14,16 @@ class NodeModel implements SimulationNodeDatum {
 
   constructor(public key: number,
               public name: string,
-              private simulationModel: SimulationModel) {
+              private simulationModel: SimulationModel,
+              private roundPrecision: number) {
+  }
+
+  @computed get dx() {
+    return round(this.x, this.roundPrecision);
+  }
+
+  @computed get dy() {
+    return round(this.y, this.roundPrecision);
   }
 
   @action.bound

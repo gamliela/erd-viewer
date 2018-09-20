@@ -10,7 +10,7 @@ const StyledLink = styled.line`
 
 function Link({link}: { link: LinkModel }) {
   return (
-    <StyledLink x1={link.source.x} y1={link.source.y} x2={link.target.x} y2={link.target.y}>
+    <StyledLink x1={link.source.dx} y1={link.source.dy} x2={link.target.dx} y2={link.target.dy}>
     </StyledLink>
   );
 }

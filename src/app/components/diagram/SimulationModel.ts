@@ -1,8 +1,9 @@
 import * as d3 from "d3-force";
 import NodeModel from "./NodeModel";
 import LinkModel from "./LinkModel";
-import {action, computed, observable} from "mobx";
+import {action, autorun, computed, observable} from "mobx";
 
+const DEBUG_MODE = true;
 const CHARGE_FORCE_STRENGTH = -0.5;
 const COLLIDE_FORCE_STRENGTH = 0.5;
 const LINK_DISTANCE = 10;
@@ -29,6 +30,9 @@ class SimulationModel {
       .stop();
 
     this.restartSimulation();
+
+    if (DEBUG_MODE)
+      autorun(this.logRunningState.bind(this));
   }
 
   @action.bound
@@ -64,6 +68,17 @@ class SimulationModel {
   @action.bound
   notifyDragEnded() {
     this.simulation.alphaTarget(ALPHA_TARGET_WHEN_NOT_DRAGGING);
+  }
+
+  private logRunningStateTimerStart = 0;
+
+  logRunningState() {
+    const now = performance.now();
+    if (this.isRunning) {
+      this.logRunningStateTimerStart = now;
+      console.log('simulation started');
+    } else
+      console.log(`simulation ended (${(now - this.logRunningStateTimerStart) / 1000} seconds)`);
   }
 }
 

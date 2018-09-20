@@ -4,6 +4,7 @@ import NodeModel from "./NodeModel";
 import LinkModel from "./LinkModel";
 import SimulationModel from "./SimulationModel";
 
+const ROUND_PRECISION = 0.1;
 const BASE_VIEWPORT_WIDTH = 100;
 const BASE_VIEWPORT_HEIGHT = 50;
 
@@ -14,7 +15,7 @@ class DiagramModel {
   public readonly simulationModel = new SimulationModel();
 
   constructor(graph: DotGraph) {
-    this.nodes = graph.objects.map((obj, index) => new NodeModel(index, obj.name, this.simulationModel));
+    this.nodes = graph.objects.map((obj, index) => new NodeModel(index, obj.name, this.simulationModel, ROUND_PRECISION));
     this.links = graph.edges.map((edge, index) => new LinkModel(index, this.nodes[edge.tail], this.nodes[edge.head]));
     this.simulationModel.init(this.nodes, this.links);
   }
