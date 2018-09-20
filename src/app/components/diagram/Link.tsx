@@ -16,6 +16,7 @@ class LinkModel implements SimulationLinkDatum<NodeModel> {
 }
 
 const StyledLink = styled.line`
+  pointer-events: none;
   stroke: black;
   stroke-width: 0.1;
 `;
