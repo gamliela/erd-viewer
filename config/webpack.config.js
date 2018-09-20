@@ -32,7 +32,7 @@ const config = {
         loader: 'ts-loader'
       },
       {
-        test: /\.(png|jpeg|jpg|gif|svg)$/,
+        test: /\.(png|jpeg|jpg|gif|svg|woff|woff2|eot|ttf)$/,
         include: projectPath,
         loader: 'url-loader'
       },
@@ -51,6 +51,12 @@ const config = {
           },
           'sass-loader'
         ]
+      },
+      {
+        // required for external css files, like bootstrap
+        test: /\.css$/,
+        include: projectPath,
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
