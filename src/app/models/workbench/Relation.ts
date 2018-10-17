@@ -4,7 +4,7 @@ import {Entity} from "./Entity";
 class Relation {
   @observable link = null;
 
-  constructor(key: number, source: Entity, target: Entity) {
+  constructor(public key: number, public source: Entity, public target: Entity) {
   }
 
   @computed get isDisplayed() {

@@ -3,7 +3,7 @@ import {computed, observable} from "mobx";
 class Entity {
   @observable node = null;
 
-  constructor(key: number, name: string) {
+  constructor(public key: number, public name: string) {
   }
 
   @computed get isDisplayed() {

@@ -18,7 +18,7 @@ class MainPage extends React.Component {
           <span className="navbar-brand">Code Explorer</span>
         </nav>
         <div className="flex-grow-1 d-flex">
-          <SideBar/>
+          <SideBar workbench={workbench}/>
           <Diagram className={"flex-grow-1"} model={workbench.diagram}/>
         </div>
       </div>
