@@ -3,11 +3,11 @@ import {observer} from "mobx-react";
 import cx from "classnames";
 import style from "./style.scss";
 import erdData from "../../models/erd/ErdData";
-import {Workbench} from "../../models/workbench/Workbench";
-import {Diagram} from "../../components/diagram/Diagram";
+import {createWorkbench, Workbench} from "../../models/workbench/Workbench";
+import {DiagramView} from "../../components/diagram/Diagram";
 import {SideBar} from "./SideBar";
 
-const workbench = new Workbench(erdData);
+const workbench = createWorkbench(erdData);
 
 @observer
 class MainPage extends React.Component {
@@ -19,7 +19,7 @@ class MainPage extends React.Component {
         </nav>
         <div className="flex-grow-1 d-flex">
           <SideBar workbench={workbench}/>
-          <Diagram className={"flex-grow-1"} model={workbench.diagram}/>
+          <DiagramView className={"flex-grow-1"} diagram={workbench.diagram}/>
         </div>
       </div>
     );

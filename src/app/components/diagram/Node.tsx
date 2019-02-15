@@ -1,72 +1,71 @@
 import * as React from "react";
-import {observer} from "mobx-react";
-import withDraggableSVG from "../../shared_modules/DraggableSVG";
 import {action, computed, observable} from "mobx";
+import {observer} from "mobx-react";
+import {castToReferenceSnapshot, Instance, types, getParent} from "mobx-state-tree";
 import {SimulationNodeDatum} from "d3-force";
-import Simulation from "./Simulation";
+import withDraggableSVG from "../../shared_modules/DraggableSVG";
+import {GRID_PRECISION, IDiagram} from "./Diagram";
 import style from "./style.scss";
+import {Entity, EntityMap, IEntity} from "../../models/erd/Entity";
+import {DotObject} from "../../models/erd/dot_json_types";
+import {SimulatedNode} from "./Simulation";
 
-function round(p, n) {
-  return p % n < n / 2 ? p - (p % n) : p + n - (p % n);
-}
+// continue.......... code refactor completed, make it run! currently build fails
 
-class NodeModel implements SimulationNodeDatum {
-  @observable x = 0;
-  @observable y = 0;
-  @observable fx = null;
-  @observable fy = null;
+// TODO: IDEAS:
+// * facilitate castToSnapshot in all models
+// * put all MST models and simulation classes under models directory
+// * create app.ts to be the root of the MST (instead of workbench)
+// * app.ts will handle adding/removing nodes from the diagram
+// * rename components again... Node -> NodeModelType, INode -> NodeModel
+// * convert components to functional style (use hooks if we need effects)
+// * log running times for simulation
+// * try replacing volatile with react hooks. does it look better?
+const Node = types
+  .model('Node', {
+    id: types.identifierNumber,
+    entity: types.reference(Entity),
+    x: 0,
+    y: 0
+  })
+  .volatile(self => {
+    const parentDiagram = getParent<any>(self);   // TODO: can we get rid of the any? IDiagram cause problems...
+    return {
+      simulatedNode: SimulatedNode(self.id, self.x, self.y, parentDiagram.notifyDragStarted, parentDiagram.notifyDragEnded)
+    }
+  });
 
-  constructor(public key: number,
-              public name: string,
-              private simulationModel: Simulation,
-              private roundPrecision: number) {
-  }
+type INode = Instance<typeof Node>;
 
-  @computed get dx() {
-    return round(this.x, this.roundPrecision);
-  }
+const NodeMap = types.map(Node);
 
-  @computed get dy() {
-    return round(this.y, this.roundPrecision);
-  }
-
-  @action.bound
-  onSVGDragStarted(x, y) {
-    this.simulationModel.notifyDragStarted();
-    this.fx = x;
-    this.fy = y;
-  }
-
-  @action.bound
-  onSVGDrag(x, y) {
-    this.fx = x;
-    this.fy = y;
-  }
-
-  @action.bound
-  onSVGDragEnded() {
-    this.simulationModel.notifyDragEnded();
-    this.fx = null;
-    this.fy = null;
-  }
+function createNodeEntry(id: number, entity: IEntity, x = 0, y = 0): Instance<typeof NodeMap> {
+  return NodeMap.create({id: {id, entity: castToReferenceSnapshot(entity), x, y}});
 }
 
 const DraggableGroup = withDraggableSVG("g");
 
+type NodeViewProps = {
+  node: INode
+}
+
 @observer
-class Node extends React.Component<{ node: NodeModel }> {
+class NodeView extends React.Component<NodeViewProps> {
+
   render() {
     const {node} = this.props;
+    const x = node.simulatedNode.dx;
+    const y = node.simulatedNode.dy;
     return (
       <DraggableGroup className={style.Node}
-                      onSVGDragStarted={node.onSVGDragStarted}
-                      onSVGDrag={node.onSVGDrag}
-                      onSVGDragEnded={node.onSVGDragEnded}>
-        <circle r="1" cx={node.dx} cy={node.dy}/>
-        <text x={node.dx} y={node.dy - 1}>{node.name}</text>
+                      onSVGDragStarted={node.simulatedNode.onSVGDragStarted}
+                      onSVGDrag={node.simulatedNode.onSVGDrag}
+                      onSVGDragEnded={node.simulatedNode.onSVGDragEnded}>
+        <circle r="1" cx={x} cy={y}/>
+        <text x={x} y={y - 1}>{node.entity.name}</text>
       </DraggableGroup>
     );
   }
 }
 
-export {NodeModel, Node};
+export {Node, INode, NodeMap, createNodeEntry, NodeView};

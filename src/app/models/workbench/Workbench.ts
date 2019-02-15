@@ -1,18 +1,22 @@
+import {castToReferenceSnapshot, types} from "mobx-state-tree";
 import {DotGraph} from "../erd/dot_json_types";
-import {Entity} from "./Entity";
-import {Relation} from "./Relation";
-import {DiagramModel} from "../../components/diagram/Diagram";
+import {createGraph, Graph} from "../erd/Graph";
+import {createDiagram, Diagram} from "../../components/diagram/Diagram";
 
-class Workbench {
-  entities: Entity[];
-  relations: Relation[];
-  diagram: DiagramModel;
+const Workbench = types.model('Workbench', {
+  graph: types.reference(Graph),
+  diagram: types.reference(Diagram),
+});
 
-  constructor(graph: DotGraph) {
-    this.entities = graph.objects.map((obj, index) => new Entity(index, obj.name));
-    this.relations = graph.edges.map((edge, index) => new Relation(index, this.entities[edge.tail], this.entities[edge.head]));
-    this.diagram = new DiagramModel(graph);
-  }
+type IWorkbench = typeof Workbench.Type;
+
+function createWorkbench(dotGraph: DotGraph): IWorkbench {
+  const graph = createGraph(dotGraph);
+  const diagram = createDiagram(graph);
+  return Workbench.create({
+    graph: castToReferenceSnapshot(graph),
+    diagram: castToReferenceSnapshot(diagram)
+  });
 }
 
-export {Workbench};
+export {Workbench, IWorkbench, createWorkbench};
