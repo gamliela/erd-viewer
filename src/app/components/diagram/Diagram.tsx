@@ -3,7 +3,7 @@ import {observer} from "mobx-react";
 import {values} from "mobx";
 import {SimulatedDiagram} from "./Simulation";
 import {createNodeEntry, NodeMap, NodeView} from "./Node";
-import {createLinkEntry, Link, LinkMap, LinkView} from "./Link";
+import {createLinkEntry, LinkMap, LinkView} from "./Link";
 import style from "./style.scss";
 import cx from "classnames";
 import {Instance, types} from "mobx-state-tree";
@@ -14,7 +14,7 @@ const GRID_PRECISION = 0.1;
 
 const Diagram = types
   .model('Diagram', {
-    zoomFactor: 50,
+    zoomFactor: types.optional(types.number, 50),
     nodes: NodeMap,
     links: LinkMap
   })
@@ -23,12 +23,13 @@ const Diagram = types
 type IDiagram = Instance<typeof Diagram>;
 
 function createEmptyDiagram(): IDiagram {
-  return Diagram.create({nodes: {}, links: {}})
+  return Diagram.create({nodes: {}, links: {}, zoomFactor: 50});      // TODO: zoomFactor is redundant but TS complains
 }
 
 function createDiagram(graph: IGraph): IDiagram {
   const diagram = createEmptyDiagram();
   const nodeIdResolver = (entity) => entity.id;
+
   diagram.nodes = mergeAll(values(graph.entities).map(entity => createNodeEntry(entity.id, entity)));
   diagram.links = mergeAll(values(graph.relations).map(relation => createLinkEntry(relation.id, relation, nodeIdResolver)));
   return diagram;
@@ -89,4 +90,4 @@ class DiagramView extends React.Component<DiagramViewProps> {
   }
 }
 
-export {GRID_PRECISION, Diagram, IDiagram, createDiagram, DiagramView};
+export {GRID_PRECISION, Diagram, IDiagram, createEmptyDiagram, createDiagram, DiagramView};

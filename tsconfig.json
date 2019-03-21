@@ -13,6 +13,9 @@
       "es2017"
     ]
   },
+  "types": [
+    "webpack-env"
+  ],
   "files": [
     "./config/typescript.config.ts"
   ],

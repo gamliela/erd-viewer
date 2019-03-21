@@ -75,8 +75,7 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
     }
 
     render() {
-      const {onSVGDragStarted, onSVGDrag, onSVGDragEnded, ...wrappedProps} = this.props as any;
-      React.createElement
+      const {...wrappedProps} = this.props as any;
       return <Component
         onPointerDown={this.onPointerDown}
         onPointerMove={this.onPointerMove}
