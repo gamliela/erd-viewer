@@ -33,7 +33,7 @@ function getYAttribute(element) {
   return parseFloat(element.getAttributeNS(null, "y") || element.getAttributeNS(null, "cy")) || 0;
 }
 
-const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.ReactType<P>) =>
+const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.ComponentType<P> | string) =>
   class WithDraggableSVG extends React.Component<P & WithDraggableSVGProps, WithDraggableSVGState> {
     constructor(props) {
       super(props);
@@ -76,6 +76,7 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.React
 
     render() {
       const {onSVGDragStarted, onSVGDrag, onSVGDragEnded, ...wrappedProps} = this.props as any;
+      React.createElement
       return <Component
         onPointerDown={this.onPointerDown}
         onPointerMove={this.onPointerMove}
