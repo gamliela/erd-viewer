@@ -1,24 +1,22 @@
-import {createEntityEntry, EntityMap} from "./Entity";
-import {createRelationEntry, RelationMap} from "./Relation";
+import {Entity, entitySnapshotFromDotObject} from "./Entity";
+import {Relation, relationSnapshotFromDotEdge} from "./Relation";
 import {DotGraph} from "./dot_json_types";
-import {castToSnapshot, types} from "mobx-state-tree";
-import {mergeAll} from "ramda";
+import {Instance, SnapshotIn, types} from "mobx-state-tree";
 
 const Graph = types.model('Graph', {
-  entities: types.optional(EntityMap, {}),
-  relations: types.optional(RelationMap, {})
+  entities: types.optional(types.array(Entity), []),
+  relations: types.optional(types.array(Relation), [])
 });
 
-type IGraph = typeof Graph.Type;
+type IGraph = Instance<typeof Graph>;
 
-function graphFromDotGraph(dotGraph: DotGraph): IGraph {
-  const entities = mergeAll(dotGraph.objects.map((dotObject, index) => createEntityEntry(index, dotObject)));
-  const relations = mergeAll(dotGraph.edges.map((dotEdge, index) => createRelationEntry(index, dotEdge)));
+type IGraphSnapshot = SnapshotIn<IGraph>;
 
-  return Graph.create({
-    entities: castToSnapshot(entities),
-    relations: castToSnapshot(relations)
-  });
+function graphSnapshotFromDotGraph(dotGraph: DotGraph): IGraphSnapshot {
+  return {
+    entities: dotGraph.objects.map((dotObject, index) => entitySnapshotFromDotObject(index, dotObject)),
+    relations: dotGraph.edges.map((dotEdge, index) => relationSnapshotFromDotEdge(index, dotEdge))
+  }
 }
 
-export {IGraph, graphFromDotGraph, Graph};
+export {Graph, IGraph, graphSnapshotFromDotGraph};

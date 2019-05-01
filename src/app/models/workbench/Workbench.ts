@@ -1,6 +1,6 @@
 import {castToSnapshot, types} from "mobx-state-tree";
 import {DotGraph} from "../erd/dot_json_types";
-import {Graph, graphFromDotGraph, IGraph} from "../erd/Graph";
+import {Graph, graphSnapshotFromDotGraph, IGraph} from "../erd/Graph";
 import {createDiagram, createEmptyDiagram, Diagram, IDiagram} from "../../components/diagram/Diagram";
 
 const Workbench = types.model('Workbench', {
@@ -18,13 +18,13 @@ function createWorkbench(graph: IGraph, diagram: IDiagram): IWorkbench {
 }
 
 function emptyWorkbench(): IWorkbench {
-  const graph = Graph.create({entities: {}, relations: {}});
+  const graph = Graph.create({entities: [], relations: []});
   const diagram = createEmptyDiagram();
   return createWorkbench(graph, diagram);
 }
 
 function workbenchFromDotGraph(dotGraph: DotGraph): IWorkbench {
-  const graph = graphFromDotGraph(dotGraph);
+  const graph = Graph.create(graphSnapshotFromDotGraph(dotGraph));
   const diagram = createDiagram(graph);
   return createWorkbench(graph, diagram);
 }

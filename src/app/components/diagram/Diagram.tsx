@@ -30,8 +30,8 @@ function createDiagram(graph: IGraph): IDiagram {
   const diagram = createEmptyDiagram();
   const nodeIdResolver = (entity) => entity.id;
 
-  diagram.nodes = mergeAll(values(graph.entities).map(entity => createNodeEntry(entity.id, entity)));
-  diagram.links = mergeAll(values(graph.relations).map(relation => createLinkEntry(relation.id, relation, nodeIdResolver)));
+  diagram.nodes = mergeAll(graph.entities.map(entity => createNodeEntry(entity.id, entity)));
+  diagram.links = mergeAll(graph.relations.map(relation => createLinkEntry(relation.id, relation, nodeIdResolver)));
   return diagram;
 }
 
