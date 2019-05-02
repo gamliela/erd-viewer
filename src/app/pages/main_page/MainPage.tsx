@@ -3,11 +3,12 @@ import {observer} from "mobx-react";
 import cx from "classnames";
 import style from "./style.scss";
 import erdData from "../../models/erd/ErdData";
-import {workbenchFromDotGraph} from "../../models/workbench/Workbench";
+import {Workbench, workbenchSnapshotFromDotGraph} from "../../models/workbench/Workbench";
 import {DiagramView} from "../../components/diagram/Diagram";
 import {SideBar} from "./SideBar";
 
-const workbench = workbenchFromDotGraph(erdData);
+const x = workbenchSnapshotFromDotGraph(erdData);
+const workbench = Workbench.create(workbenchSnapshotFromDotGraph(erdData));
 
 @observer
 class MainPage extends React.Component {

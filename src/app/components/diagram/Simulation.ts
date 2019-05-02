@@ -19,32 +19,6 @@ function round(p, n) {
   return p % n < n / 2 ? p - (p % n) : p + n - (p % n);
 }
 
-// TODO: replace with factory function (insert into createSimulatedNode)
-// class SimulatedNode implements SimulationNodeDatum {
-//   @observable x = 0;
-//   @observable y = 0;
-//   @observable fx = null;
-//   @observable fy = null;
-//
-//   constructor(public id: number, x: number, y: number) {
-//     this.id = id; // TODO: is this required? I'm using the public keyword...
-//     this.x = x;
-//     this.y = y;
-//   }
-//
-//   @computed get dx() {
-//     return round(this.x, GRID_PRECISION);
-//   }
-//
-//   @computed get dy() {
-//     return round(this.y, GRID_PRECISION);
-//   }
-// }
-//
-// function createSimulatedNode(node : INode) {
-//   return new SimulatedNode(node.id, node.x, node.y);
-// }
-
 function SimulatedNode(id: number,
                        x: number,
                        y: number,

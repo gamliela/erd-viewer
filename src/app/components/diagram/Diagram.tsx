@@ -2,36 +2,43 @@ import * as React from "react";
 import {observer} from "mobx-react";
 import {values} from "mobx";
 import {SimulatedDiagram} from "./Simulation";
-import {createNodeEntry, NodeMap, NodeView} from "./Node";
-import {createLinkEntry, LinkMap, LinkView} from "./Link";
+import {INode, Node, nodeSnapshotFromEntity, NodeView} from "./Node";
+import {Link, linkSnapshotFromRelation, LinkView} from "./Link";
 import style from "./style.scss";
 import cx from "classnames";
-import {Instance, types} from "mobx-state-tree";
+import {cast, Instance, SnapshotIn, SnapshotOrInstance, types} from "mobx-state-tree";
 import {mergeAll} from "ramda";
-import {IGraph} from "../../models/erd/Graph";
+import {Graph, IGraph} from "../../models/erd/Graph";
+import {Entity, IEntity} from "../../models/erd/Entity";
 
 const GRID_PRECISION = 0.1;
 
-const Diagram = types
+const DiagramModel = types
   .model('Diagram', {
     zoomFactor: types.optional(types.number, 50),
-    nodes: NodeMap,
-    links: LinkMap
-  })
-  .extend(SimulatedDiagram);
+    nodes: types.array(Node),
+    links: types.array(Link)
+  });
+
+const Diagram = DiagramModel.extend(SimulatedDiagram);
 
 type IDiagram = Instance<typeof Diagram>;
 
-function createEmptyDiagram(): IDiagram {
-  return Diagram.create({nodes: {}, links: {}, zoomFactor: 50});      // TODO: zoomFactor is redundant but TS complains
+type IDiagramSnapshot = SnapshotIn<IDiagram>;
+
+function emptyDiagramSnapshot(): IDiagramSnapshot {
+  return {
+    zoomFactor: 50,  // TODO: zoomFactor is redundant but TS complains
+    nodes: [],
+    links: []
+  };
 }
 
-function createDiagram(graph: IGraph): IDiagram {
-  const diagram = createEmptyDiagram();
-  const nodeIdResolver = (entity) => entity.id;
+function diagramSnapshotFromGraph(graph: SnapshotIn<typeof Graph>): IDiagramSnapshot {
+  const diagram = emptyDiagramSnapshot();
+  diagram.nodes = graph.entities.map(entity => nodeSnapshotFromEntity(entity.id, entity));
+  diagram.links = graph.relations.map(relation => linkSnapshotFromRelation(relation.id, relation, relation.source, relation.target));
 
-  diagram.nodes = mergeAll(graph.entities.map(entity => createNodeEntry(entity.id, entity)));
-  diagram.links = mergeAll(graph.relations.map(relation => createLinkEntry(relation.id, relation, nodeIdResolver)));
   return diagram;
 }
 
@@ -82,12 +89,12 @@ class DiagramView extends React.Component<DiagramViewProps> {
   }
 
   renderNodes() {
-    return values(this.props.diagram.nodes).map(node => <NodeView key={node.id} node={node}/>);
+    return this.props.diagram.nodes.map(node => <NodeView key={node.id} node={node}/>);
   }
 
   renderLinks() {
-    return values(this.props.diagram.links).map(link => <LinkView key={link.id} link={link}/>);
+    return this.props.diagram.links.map(link => <LinkView key={link.id} link={link}/>);
   }
 }
 
-export {GRID_PRECISION, Diagram, IDiagram, createEmptyDiagram, createDiagram, DiagramView};
+export {GRID_PRECISION, Diagram, IDiagram, emptyDiagramSnapshot, diagramSnapshotFromGraph, DiagramView};

@@ -12,6 +12,13 @@ type IGraph = Instance<typeof Graph>;
 
 type IGraphSnapshot = SnapshotIn<IGraph>;
 
+function emptyGraphSnapshot() {
+  return {
+    entities: [],
+    relations: []
+  }
+}
+
 function graphSnapshotFromDotGraph(dotGraph: DotGraph): IGraphSnapshot {
   return {
     entities: dotGraph.objects.map((dotObject, index) => entitySnapshotFromDotObject(index, dotObject)),
@@ -19,4 +26,4 @@ function graphSnapshotFromDotGraph(dotGraph: DotGraph): IGraphSnapshot {
   }
 }
 
-export {Graph, IGraph, graphSnapshotFromDotGraph};
+export {Graph, IGraph, emptyGraphSnapshot, graphSnapshotFromDotGraph};

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {action, computed, observable} from "mobx";
 import {observer} from "mobx-react";
-import {castToReferenceSnapshot, Instance, types, getParent} from "mobx-state-tree";
+import {castToReferenceSnapshot, Instance, types, getParent, SnapshotIn} from "mobx-state-tree";
 import {SimulationNodeDatum} from "d3-force";
 import withDraggableSVG from "../../shared_modules/DraggableSVG";
 import {GRID_PRECISION, IDiagram} from "./Diagram";
@@ -17,17 +17,18 @@ import {SimulatedNode} from "./Simulation";
 // * put all MST models and simulation classes under models directory
 // * create app.ts to be the root of the MST (instead of workbench)
 // * app.ts will handle adding/removing nodes from the diagram
-// * rename components again... Node -> NodeModelType, INode -> NodeModel
 // * convert components to functional style (use hooks if we need effects)
 // * log running times for simulation
 // * try replacing volatile with react hooks. does it look better?
-const Node = types
+const NodeModel = types
   .model('Node', {
     id: types.identifierNumber,
     entity: types.reference(Entity),
     x: 0,
     y: 0
-  })
+  });
+
+const Node = NodeModel
   .volatile(self => {
     const parentDiagram = getParent<any>(self);   // TODO: can we get rid of the any? IDiagram cause problems...
     return {
@@ -37,10 +38,21 @@ const Node = types
 
 type INode = Instance<typeof Node>;
 
-const NodeMap = types.map(Node);
+type INodeSnapshot = SnapshotIn<INode>;
 
-function createNodeEntry(id: number, entity: IEntity, x = 0, y = 0): Instance<typeof NodeMap> {
-  return NodeMap.create({id: {id, entity: castToReferenceSnapshot(entity), x, y}});
+// const NodeMap = types.map(Node);
+//
+// function createNodeEntry(id: number, entity: IEntity, x = 0, y = 0): Instance<typeof NodeMap> {
+//   return NodeMap.create({id: {id, entity: castToReferenceSnapshot(entity), x, y}});
+// }
+
+function nodeSnapshotFromEntity(id: number, entity: SnapshotIn<typeof Entity>, x = 0, y = 0): INodeSnapshot {
+  return {
+    id,
+    entity: entity.id,
+    x,
+    y
+  }
 }
 
 const DraggableGroup = withDraggableSVG("g");
@@ -68,4 +80,4 @@ class NodeView extends React.Component<NodeViewProps> {
   }
 }
 
-export {Node, INode, NodeMap, createNodeEntry, NodeView};
+export {Node, INode, nodeSnapshotFromEntity, NodeView};
