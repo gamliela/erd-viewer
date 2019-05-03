@@ -1,8 +1,8 @@
 import * as React from "react";
 import {observer} from "mobx-react";
 import {values} from "mobx";
-import {SimulatedDiagram} from "./Simulation";
-import {INode, Node, nodeSnapshotFromEntity, NodeView} from "./Node";
+import {SimulatedDiagramType} from "./Simulation";
+import {INode, INodeParent, Node, nodeSnapshotFromEntity, NodeView} from "./Node";
 import {Link, linkSnapshotFromRelation, LinkView} from "./Link";
 import style from "./style.scss";
 import cx from "classnames";
@@ -20,9 +20,18 @@ const DiagramModel = types
     links: types.array(Link)
   });
 
-const Diagram = DiagramModel.extend(SimulatedDiagram);
+const Diagram = DiagramModel
+  .views(self => ({
+    get simulatedNodes() {
+      return self.nodes.map(node => node.simulatedNode)
+    },
+    get simulatedLinks() {
+      return self.links.map(node => node.simulatedLink)
+    }
+  }))
+  .extend(SimulatedDiagramType);
 
-type IDiagram = Instance<typeof Diagram>;
+type IDiagram = Instance<typeof Diagram> & INodeParent;
 
 type IDiagramSnapshot = SnapshotIn<IDiagram>;
 
@@ -97,4 +106,4 @@ class DiagramView extends React.Component<DiagramViewProps> {
   }
 }
 
-export {GRID_PRECISION, Diagram, IDiagram, emptyDiagramSnapshot, diagramSnapshotFromGraph, DiagramView};
+export {GRID_PRECISION, DiagramModel, Diagram, IDiagram, emptyDiagramSnapshot, diagramSnapshotFromGraph, DiagramView};

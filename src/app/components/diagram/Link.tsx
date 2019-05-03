@@ -12,7 +12,7 @@ import {
 } from "mobx-state-tree";
 import {IRelation, Relation} from "../../models/erd/Relation";
 import {IDiagram} from "./Diagram";
-import {SimulatedLink} from "./Simulation";
+import {createSimulatedLink} from "./Simulation";
 
 const LinkModel = types
   .model('Link', {
@@ -24,7 +24,7 @@ const LinkModel = types
 
 const Link = LinkModel
   .volatile(self => ({
-    simulatedLink: SimulatedLink(self.source.id, self.target.id)
+    simulatedLink: createSimulatedLink(self.source.id, self.target.id)
   }));
 
 type ILink = Instance<typeof Link>;

@@ -1,14 +1,22 @@
 import * as React from "react";
 import {action, computed, observable} from "mobx";
 import {observer} from "mobx-react";
-import {castToReferenceSnapshot, Instance, types, getParent, SnapshotIn} from "mobx-state-tree";
+import {
+  castToReferenceSnapshot,
+  Instance,
+  types,
+  getParent,
+  SnapshotIn,
+  getEnv,
+  IAnyStateTreeNode
+} from "mobx-state-tree";
 import {SimulationNodeDatum} from "d3-force";
 import withDraggableSVG from "../../shared_modules/DraggableSVG";
 import {GRID_PRECISION, IDiagram} from "./Diagram";
 import style from "./style.scss";
 import {Entity, EntityMap, IEntity} from "../../models/erd/Entity";
 import {DotObject} from "../../models/erd/dot_json_types";
-import {SimulatedNode} from "./Simulation";
+import {createSimulatedNode} from "./Simulation";
 
 // continue.......... code refactor completed, make it run! currently build fails
 
@@ -20,6 +28,7 @@ import {SimulatedNode} from "./Simulation";
 // * convert components to functional style (use hooks if we need effects)
 // * log running times for simulation
 // * try replacing volatile with react hooks. does it look better?
+// * check for no circular dependencies: make sure that node doesn't require link, link doesn't require diagram, simulation stuff doesn't require any of those
 const NodeModel = types
   .model('Node', {
     id: types.identifierNumber,
@@ -28,23 +37,22 @@ const NodeModel = types
     y: 0
   });
 
+interface INodeParent extends IAnyStateTreeNode {
+  onDragStarted: () => void,
+  onDragEnded: () => void
+}
+
 const Node = NodeModel
   .volatile(self => {
-    const parentDiagram = getParent<any>(self);   // TODO: can we get rid of the any? IDiagram cause problems...
+    const parent = getParent<INodeParent>(self);
     return {
-      simulatedNode: SimulatedNode(self.id, self.x, self.y, parentDiagram.notifyDragStarted, parentDiagram.notifyDragEnded)
+      simulatedNode: createSimulatedNode(self.id, self.x, self.y, parent.onDragStarted, parent.onDragEnded)
     }
   });
 
 type INode = Instance<typeof Node>;
 
 type INodeSnapshot = SnapshotIn<INode>;
-
-// const NodeMap = types.map(Node);
-//
-// function createNodeEntry(id: number, entity: IEntity, x = 0, y = 0): Instance<typeof NodeMap> {
-//   return NodeMap.create({id: {id, entity: castToReferenceSnapshot(entity), x, y}});
-// }
 
 function nodeSnapshotFromEntity(id: number, entity: SnapshotIn<typeof Entity>, x = 0, y = 0): INodeSnapshot {
   return {
@@ -68,6 +76,7 @@ class NodeView extends React.Component<NodeViewProps> {
     const {node} = this.props;
     const x = node.simulatedNode.dx;
     const y = node.simulatedNode.dy;
+
     return (
       <DraggableGroup className={style.Node}
                       onSVGDragStarted={node.simulatedNode.onSVGDragStarted}
@@ -80,4 +89,4 @@ class NodeView extends React.Component<NodeViewProps> {
   }
 }
 
-export {Node, INode, nodeSnapshotFromEntity, NodeView};
+export {Node, INode, INodeParent, nodeSnapshotFromEntity, NodeView};

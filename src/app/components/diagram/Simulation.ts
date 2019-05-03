@@ -2,8 +2,8 @@ import * as d3 from "d3-force";
 import {action, autorun, computed, observable, values} from "mobx";
 import {Instance, types} from "mobx-state-tree";
 import {SimulationLinkDatum, SimulationNodeDatum} from "d3-force";
-import {Diagram, GRID_PRECISION, IDiagram} from "./Diagram";
-import {INode, Node} from "./Node";
+import {Diagram, GRID_PRECISION, IDiagram, DiagramModel} from "./Diagram";
+import {INode, INodeParent, Node} from "./Node";
 import {ILink} from "./Link";
 
 const DEBUG_MODE = true;
@@ -19,12 +19,20 @@ function round(p, n) {
   return p % n < n / 2 ? p - (p % n) : p + n - (p % n);
 }
 
-function SimulatedNode(id: number,
-                       x: number,
-                       y: number,
-                       notifyDragStarted: () => void,
-                       notifyDragEnded: () => void) {
-  return observable({
+interface ISimulatedNode extends SimulationNodeDatum {
+  readonly dx: number,
+  readonly dy: number,
+  onSVGDragStarted: (x: number, y: number) => void,
+  onSVGDrag: (x: number, y: number) => void,
+  onSVGDragEnded: () => void
+}
+
+function createSimulatedNode(id: number,
+                             x: number,
+                             y: number,
+                             onDragStarted: () => void,
+                             onDragEnded: () => void): ISimulatedNode {
+  return observable.object({
       id: id,
       x: x,
       y: y,
@@ -40,7 +48,8 @@ function SimulatedNode(id: number,
       },
 
       onSVGDragStarted: (x, y) => {
-        notifyDragStarted();
+        debugger;
+        onDragStarted();
         this.fx = x;
         this.fy = y;
       },
@@ -51,7 +60,7 @@ function SimulatedNode(id: number,
       },
 
       onSVGDragEnded: () => {
-        notifyDragEnded();
+        onDragEnded();
         this.fx = null;
         this.fy = null;
       }
@@ -66,7 +75,12 @@ function SimulatedNode(id: number,
     });
 }
 
-function SimulatedLink(sourceId: number, targetId: number) {
+interface ISimulatedLink extends SimulationLinkDatum<SimulationNodeDatum> {
+  source: number,
+  target: number
+}
+
+function createSimulatedLink(sourceId: number, targetId: number): ISimulatedLink {
   return {
     source: sourceId,
     target: targetId
@@ -145,22 +159,19 @@ function SimulatedLink(sourceId: number, targetId: number) {
 //   }
 // }
 
-function SimulatedDiagram(diagram: any) {   // TODO: change type! (after we see the extend thing works)
+function SimulatedDiagramType(self: { simulatedNodes: SimulationNodeDatum[], simulatedLinks: SimulationLinkDatum<SimulationNodeDatum>[] }) {
   let d3Simulation = null;
   let animationFrameId = 0;
 
   const isRunning = () => d3Simulation != null;
 
   function initSimulation() {
-    const nodes = values(diagram.nodes).map(node => node.simulatedNode);
-    const links = values(diagram.links).map(link => link.simulatedLink);
-
     this.simulation = d3.forceSimulation();
     this.simulation
-      .nodes(nodes)
+      .nodes(self.simulatedNodes)
       //.force("centering_force", d3.forceCenter())
       .force("charge_force", d3.forceManyBody().strength(CHARGE_FORCE_STRENGTH))
-      .force("links_force", d3.forceLink(links).distance(LINK_DISTANCE))
+      .force("links_force", d3.forceLink(self.simulatedLinks).distance(LINK_DISTANCE))
       .force("collide_force", d3.forceCollide().strength(COLLIDE_FORCE_STRENGTH).radius(1.5))
       .alpha(ALPHA_INITIAL)
       .alphaMin(ALPHA_MIN)
@@ -197,16 +208,16 @@ function SimulatedDiagram(diagram: any) {   // TODO: change type! (after we see 
     actions: {
       initSimulation,   // TODO: we'll probably want to call it after adding nodes to the diagram...
 
-      notifyDragStarted() {
+      onDragStarted() {
         d3Simulation.alphaTarget(ALPHA_TARGET_WHEN_DRAGGING).alpha(ALPHA_INITIAL);
         restartSimulation();
       },
 
-      notifyDragEnded() {
+      onDragEnded() {
         d3Simulation.alphaTarget(ALPHA_TARGET_WHEN_NOT_DRAGGING);
       }
     }
   }
 }
 
-export {SimulatedNode, SimulatedLink, SimulatedDiagram};
+export {createSimulatedNode, createSimulatedLink, SimulatedDiagramType};
