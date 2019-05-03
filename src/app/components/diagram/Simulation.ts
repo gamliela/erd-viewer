@@ -48,7 +48,6 @@ function createSimulatedNode(id: number,
       },
 
       onSVGDragStarted: (x, y) => {
-        debugger;
         onDragStarted();
         this.fx = x;
         this.fy = y;
@@ -163,7 +162,7 @@ function SimulatedDiagramType(self: { simulatedNodes: SimulationNodeDatum[], sim
   let d3Simulation = null;
   let animationFrameId = 0;
 
-  const isRunning = () => d3Simulation != null;
+  const isRunning = () => animationFrameId != 0;
 
   function initSimulation() {
     this.simulation = d3.forceSimulation();
@@ -178,27 +177,19 @@ function SimulatedDiagramType(self: { simulatedNodes: SimulationNodeDatum[], sim
       .alphaTarget(ALPHA_TARGET_WHEN_NOT_DRAGGING)
       .stop();
 
-    this.restartSimulation();
+    this.requestSimulationTick();
 
     // if (DEBUG_MODE)
     //   autorun(this.logRunningState.bind(this));
   }
 
-  function restartSimulation() {
-    stopSimulation();
+  function requestSimulationTick() {
+    window.cancelAnimationFrame(animationFrameId);
     if (d3Simulation.alpha() >= d3Simulation.alphaMin())
-      animationFrameId = window.requestAnimationFrame(tickSimulation);
-  }
-
-  function tickSimulation() {
-    d3Simulation.tick();
-    restartSimulation();
-  }
-
-  function stopSimulation() {
-    if (isRunning)
-      window.cancelAnimationFrame(animationFrameId);
-    animationFrameId = 0;
+      animationFrameId = window.requestAnimationFrame(() => {
+        d3Simulation.tick();
+        requestSimulationTick();
+      });
   }
 
   return {
@@ -210,7 +201,7 @@ function SimulatedDiagramType(self: { simulatedNodes: SimulationNodeDatum[], sim
 
       onDragStarted() {
         d3Simulation.alphaTarget(ALPHA_TARGET_WHEN_DRAGGING).alpha(ALPHA_INITIAL);
-        restartSimulation();
+        requestSimulationTick();
       },
 
       onDragEnded() {
