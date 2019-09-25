@@ -7,8 +7,9 @@ import {Workbench, workbenchSnapshotFromDotGraph} from "../../models/workbench/W
 import {DiagramView} from "../../components/diagram/Diagram";
 import {SideBar} from "./SideBar";
 
-const x = workbenchSnapshotFromDotGraph(erdData);
+debugger;
 const workbench = Workbench.create(workbenchSnapshotFromDotGraph(erdData));
+debugger;
 
 @observer
 class MainPage extends React.Component {

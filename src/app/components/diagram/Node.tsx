@@ -8,17 +8,17 @@ import {
   getParent,
   SnapshotIn,
   getEnv,
-  IAnyStateTreeNode
+  IAnyStateTreeNode, getParentOfType
 } from "mobx-state-tree";
 import {SimulationNodeDatum} from "d3-force";
 import withDraggableSVG from "../../shared_modules/DraggableSVG";
-import {GRID_PRECISION, IDiagram} from "./Diagram";
+import {Diagram, GRID_PRECISION, IDiagram} from "./Diagram";
 import style from "./style.scss";
 import {Entity, EntityMap, IEntity} from "../../models/erd/Entity";
 import {DotObject} from "../../models/erd/dot_json_types";
 import {createSimulatedNode} from "./Simulation";
 
-// continue.......... code refactor completed, make it run! currently build fails
+// continue.......... simulation should work on beginning. dragging should work.
 
 // TODO: IDEAS:
 // * facilitate castToSnapshot in all models
@@ -44,9 +44,16 @@ interface INodeParent extends IAnyStateTreeNode {
 
 const Node = NodeModel
   .volatile(self => {
-    const parent = getParent<INodeParent>(self);
+    const gp = getParent;
+    const gpot = getParentOfType;
+    const d = Diagram;
+    debugger;
+    const parent1 : INodeParent = getParent(self);
+    const parent2 : INodeParent = getParentOfType(self, Diagram);
+    const parent3 : INodeParent = getParent(self);
+    // why........... parent2 is not the same as parent1/3?
     return {
-      simulatedNode: createSimulatedNode(self.id, self.x, self.y, parent.onDragStarted, parent.onDragEnded)
+      simulatedNode: createSimulatedNode(self.id, self.x, self.y, parent2.onDragStarted, parent2.onDragEnded)
     }
   });
 
