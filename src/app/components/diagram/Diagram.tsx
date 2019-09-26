@@ -1,27 +1,10 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import {DotGraph} from "../../models/erd/dot_json_types";
-import {observable} from "mobx";
-import Simulation from "./Simulation";
-import {Node, NodeModel} from "./Node";
-import {Link, LinkModel} from "./Link";
+import {Node} from "./Node";
+import {Link} from "./Link";
 import style from "./style.scss";
 import cx from "classnames";
-
-const GRID_PRECISION = 0.1;
-
-class DiagramModel {
-  zoomFactor: number = 50;
-  @observable nodes: NodeModel[];
-  @observable links: LinkModel[];
-  public readonly simulationModel = new Simulation();
-
-  constructor(graph: DotGraph) {
-    this.nodes = graph.objects.map((obj, index) => new NodeModel(index, obj.name, this.simulationModel, GRID_PRECISION));
-    this.links = graph.edges.map((edge, index) => new LinkModel(index, this.nodes[edge.tail], this.nodes[edge.head]));
-    this.simulationModel.init(this.nodes, this.links);
-  }
-}
+import {DiagramModel} from "./DiagramModel";
 
 @observer
 class Diagram extends React.Component<{ model: DiagramModel, className?: string }> {
@@ -47,4 +30,4 @@ class Diagram extends React.Component<{ model: DiagramModel, className?: string 
   }
 }
 
-export {DiagramModel, Diagram};
+export {Diagram};

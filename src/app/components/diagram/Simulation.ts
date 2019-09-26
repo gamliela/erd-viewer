@@ -1,7 +1,7 @@
 import * as d3 from "d3-force";
 import {action, autorun, computed, observable} from "mobx";
-import {NodeModel} from "./Node";
-import {LinkModel} from "./Link";
+import {NodeModel} from "./NodeModel";
+import {LinkModel} from "./LinkModel";
 
 const DEBUG_MODE = true;
 const CHARGE_FORCE_STRENGTH = -0.5;
@@ -12,7 +12,7 @@ const ALPHA_MIN = 0.001;
 const ALPHA_TARGET_WHEN_NOT_DRAGGING = 0;   // must be < ALPHA_MIN
 const ALPHA_TARGET_WHEN_DRAGGING = 0.3;     // must be > ALPHA_MIN
 
-class Simulation {
+class SimulationModel {
   private simulation;
   @observable animationFrameId = 0;
 
@@ -82,4 +82,4 @@ class Simulation {
   }
 }
 
-export default Simulation;
+export default SimulationModel;

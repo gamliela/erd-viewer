@@ -3,10 +3,10 @@ import {observer} from "mobx-react";
 import cx from "classnames";
 import style from "./style.scss";
 import {EntityList} from "./EntityList";
-import {Workbench} from "../../models/workbench/Workbench";
+import {WorkbenchModel} from "../../models/workbench/WorkbenchModel";
 
 @observer
-class SideBar extends React.Component<{ className?: string, workbench: Workbench }> {
+class SideBar extends React.Component<{ className?: string, workbench: WorkbenchModel }> {
   render() {
     const {className, workbench} = this.props;
     return (

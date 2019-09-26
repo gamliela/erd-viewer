@@ -1,19 +1,7 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import {SimulationLinkDatum} from "d3-force";
-import {observable} from "mobx";
-import {NodeModel} from "./Node";
 import style from "./style.scss";
-
-class LinkModel implements SimulationLinkDatum<NodeModel> {
-  @observable source: NodeModel;
-  @observable target: NodeModel;
-
-  constructor(public key: number, source: NodeModel, target: NodeModel) {
-    this.source = source;
-    this.target = target;
-  }
-}
+import {LinkModel} from "./LinkModel";
 
 @observer
 class Link extends React.Component<{ link: LinkModel }> {
@@ -26,4 +14,4 @@ class Link extends React.Component<{ link: LinkModel }> {
   }
 }
 
-export {LinkModel, Link};
+export {Link};

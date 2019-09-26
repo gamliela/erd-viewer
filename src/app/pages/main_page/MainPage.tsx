@@ -3,11 +3,11 @@ import {observer} from "mobx-react";
 import cx from "classnames";
 import style from "./style.scss";
 import erdData from "../../models/erd/ErdData";
-import {Workbench} from "../../models/workbench/Workbench";
+import {WorkbenchModel} from "../../models/workbench/WorkbenchModel";
 import {Diagram} from "../../components/diagram/Diagram";
 import {SideBar} from "./SideBar";
 
-const workbench = new Workbench(erdData);
+const workbench = new WorkbenchModel(erdData);
 
 @observer
 class MainPage extends React.Component {
