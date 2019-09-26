@@ -12,7 +12,7 @@ class NodeModel implements SimulationNodeDatum {
   @observable fx = null;
   @observable fy = null;
 
-  constructor(public key: number,
+  constructor(public id: number,
               public name: string,
               private simulationModel: SimulationModel,
               private roundPrecision: number) {

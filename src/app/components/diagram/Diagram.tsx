@@ -22,11 +22,11 @@ class Diagram extends React.Component<{ model: DiagramModel, className?: string 
   }
 
   renderNodes() {
-    return this.props.model.nodes.map(node => <Node key={node.key} node={node}/>)
+    return this.props.model.nodes.map(node => <Node key={node.id} node={node}/>)
   }
 
   renderLinks() {
-    return this.props.model.links.map(link => <Link key={link.key} link={link}/>)
+    return this.props.model.links.map(link => <Link key={link.id} link={link}/>)
   }
 }
 

@@ -6,7 +6,7 @@ import {WorkbenchModel} from "../../models/workbench/WorkbenchModel";
 
 const ListItem = ({entity}) => <li className="list-group-item list-group-item-action">{entity.name}</li>;
 
-const ListItems = ({entities}) => entities.map(entity => <ListItem key={entity.key} entity={entity}/>);
+const ListItems = ({entities}) => entities.map(entity => <ListItem key={entity.id} entity={entity}/>);
 
 @observer
 class EntityList extends React.Component<{ className?: string, workbench: WorkbenchModel }> {
