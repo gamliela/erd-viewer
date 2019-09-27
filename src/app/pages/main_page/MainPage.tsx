@@ -16,6 +16,10 @@ class MainPage extends React.Component {
       <div className={cx("d-flex flex-column", style.MainPage)}>
         <nav className="navbar navbar-light bg-light">
           <span className="navbar-brand">Code Explorer</span>
+          <form className="form-inline">
+            <button type="button" className="btn btn-secondary" onClick={workbench.load}>Load</button>
+            <button type="button" className="btn btn-secondary ml-2" onClick={workbench.save}>Save</button>
+          </form>
         </nav>
         <div className="flex-grow-1 d-flex">
           <SideBar workbench={workbench}/>
