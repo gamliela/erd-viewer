@@ -1,9 +1,9 @@
 import {observable} from "mobx";
+import {list, object, serializable} from "serializr";
 import {NodeModel} from "./NodeModel";
 import {LinkModel} from "./LinkModel";
 import SimulationModel from "./Simulation";
-import {DotGraph} from "../../models/erd/dot_json_types";
-import {list, object, serializable} from "serializr";
+import {GraphModel} from "../../models/erd/GraphModel";
 
 class DiagramModel {
   @serializable zoomFactor: number = 50;
@@ -12,17 +12,21 @@ class DiagramModel {
 
   private simulationModel = new SimulationModel();
 
-  constructor(graph?: DotGraph) {
+  constructor(graph?: GraphModel) {
     if (graph) {
-      this.nodes = graph.objects.map((obj, id) => new NodeModel({
-        id,
-        name: obj.name,
-        simulationModel: this.simulationModel
-      }));
-      this.links = graph.edges.map((edge, id) => new LinkModel({
-        id,
-        source: this.nodes[edge.tail],
-        target: this.nodes[edge.head]
+      const entityToNodeMap = {};
+      this.nodes = graph.entities.map((entity, nodeId) => {
+        entityToNodeMap[entity.id] = nodeId;
+        return new NodeModel({
+          id: nodeId,
+          name: entity.name,
+          simulationModel: this.simulationModel
+        })
+      });
+      this.links = graph.relations.map((relation, relationId) => new LinkModel({
+        id: relationId,
+        source: this.nodes[entityToNodeMap[relation.source.id]],
+        target: this.nodes[entityToNodeMap[relation.target.id]]
       }));
       this.simulationModel.init(this.nodes, this.links);
     }

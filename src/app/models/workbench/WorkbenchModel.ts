@@ -5,7 +5,6 @@ import {DiagramModel} from "../../components/diagram/DiagramModel";
 import {GraphModel} from "../erd/GraphModel";
 
 // continue:
-// * diagram should be constructed from graph
 // * simulation should be started automatically
 // * errors in load should be handled
 // * move all simulation state and other volatile state into components state (?)
@@ -16,7 +15,7 @@ class WorkbenchModel {
 
   constructor(graph: DotGraph) {
     this.graph = new GraphModel(graph);
-    this.diagram = new DiagramModel(graph);
+    this.diagram = new DiagramModel(this.graph);
   }
 
   @action.bound
