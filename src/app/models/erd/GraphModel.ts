@@ -7,7 +7,7 @@ class GraphModel {
   @serializable(list(object(EntityModel))) entities: EntityModel[] = [];
   @serializable(list(object(RelationModel))) relations: RelationModel[] = [];
 
-  constructor(graph: DotGraph) {
+  constructor(graph?: DotGraph) {
     if (graph) {
       this.entities = graph.objects.map((obj, id) => new EntityModel({
         id,

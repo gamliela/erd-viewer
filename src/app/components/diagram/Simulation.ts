@@ -16,7 +16,7 @@ class SimulationModel {
   private simulation;
   @observable private animationFrameId = 0;
 
-  init(nodes: NodeModel[], links: LinkModel[]) {
+  init(nodes: NodeModel[], links: LinkModel[], startFrozen: boolean = false) {
     this.simulation = d3.forceSimulation();
     this.simulation
       .nodes(nodes)
@@ -29,7 +29,9 @@ class SimulationModel {
       .alphaTarget(ALPHA_TARGET_WHEN_NOT_DRAGGING)
       .stop();
 
-    this.restartSimulation();
+    if (!startFrozen) {
+      this.restartSimulation();
+    }
 
     if (DEBUG_MODE)
       autorun(this.logRunningState.bind(this));

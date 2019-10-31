@@ -21,10 +21,13 @@ class NodeModel implements SimulationNodeDatum {
 
   constructor(props: {
     id?: number,
-    name?: string,
-    simulationModel?: SimulationModel
+    name?: string
   } = {}) {
     Object.assign(this, props);
+  }
+
+  postDeserialize(simulationModel : SimulationModel) {
+    this.simulationModel = simulationModel;
   }
 
   @computed get dx() {

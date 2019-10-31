@@ -10,7 +10,7 @@ class DiagramModel {
   @serializable(list(object(NodeModel))) @observable nodes: NodeModel[] = [];
   @serializable(list(object(LinkModel))) @observable links: LinkModel[] = [];
 
-  private simulationModel = new SimulationModel();
+  private simulationModel = null;
 
   constructor(graph?: GraphModel) {
     if (graph) {
@@ -20,7 +20,6 @@ class DiagramModel {
         return new NodeModel({
           id: nodeId,
           name: entity.name,
-          simulationModel: this.simulationModel
         })
       });
       this.links = graph.relations.map((relation, relationId) => new LinkModel({
@@ -28,8 +27,15 @@ class DiagramModel {
         source: this.nodes[entityToNodeMap[relation.source.id]],
         target: this.nodes[entityToNodeMap[relation.target.id]]
       }));
-      this.simulationModel.init(this.nodes, this.links);
+      this.postDeserialize(false);
     }
+  }
+
+  // `simulationModel` is not persisted, so we need to update both the diagram and the nodes with a new `simulationModel`
+  postDeserialize(startFrozen: boolean) {
+    this.simulationModel = new SimulationModel();
+    this.nodes.forEach(node => node.postDeserialize(this.simulationModel));
+    this.simulationModel.init(this.nodes, this.links, startFrozen);
   }
 }
 
