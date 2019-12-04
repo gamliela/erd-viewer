@@ -21,8 +21,11 @@ class WorkbenchModel {
 
   @action.bound
   load() {
-    Object.assign(this, deserialize(WorkbenchModel, JSON.parse(localStorage.getItem("WorkbenchModel"))));
-    this.diagram.postDeserialize(true);
+    const storedItem = localStorage.getItem("WorkbenchModel");
+    if (storedItem) {
+      Object.assign(this, deserialize(WorkbenchModel, JSON.parse(storedItem)));
+      this.diagram.postDeserialize(true);
+    }
   }
 
   @action.bound
