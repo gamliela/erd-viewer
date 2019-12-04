@@ -13,7 +13,7 @@ const ALPHA_TARGET_WHEN_DRAGGING = 0.3;     // must be > ALPHA_MIN
 
 class SimulationModel {
   private simulation;
-  @observable private animationFrameId = 0;
+  private animationFrameId = 0;
 
   init(nodes: NodeModel[], links: LinkModel[], startFrozen = false) {
     this.simulation = d3.forceSimulation();
