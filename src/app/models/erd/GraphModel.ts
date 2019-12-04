@@ -1,4 +1,4 @@
-import {list, object, reference, serializable} from "serializr";
+import {list, object, serializable} from "serializr";
 import {DotGraph} from "./dot_json_types";
 import {EntityModel} from "./EntityModel";
 import {RelationModel} from "./RelationModel";

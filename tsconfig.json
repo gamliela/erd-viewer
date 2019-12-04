@@ -13,9 +13,6 @@
       "es2017"
     ]
   },
-  "files": [
-    "./config/typescript.config.ts"
-  ],
   "include": [
     "src/**/*"
   ]

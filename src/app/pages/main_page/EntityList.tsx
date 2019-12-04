@@ -3,15 +3,20 @@ import {observer} from "mobx-react";
 import cx from "classnames";
 import style from "./style.scss";
 import {WorkbenchModel} from "../../models/workbench/WorkbenchModel";
+import {EntityModel} from "../../models/erd/EntityModel";
 
-const ListItem = ({entity}) => <li className="list-group-item list-group-item-action">{entity.name}</li>;
+const ListItem = ({entity}: { entity: EntityModel }) => (
+  <li className="list-group-item list-group-item-action">{entity.name}</li>
+);
 
-const ListItems = ({entities}) => entities.map(entity => <ListItem key={entity.id} entity={entity}/>);
+const ListItems = ({entities}: { entities: EntityModel[] }) => (
+  <>{entities.map(entity => <ListItem key={entity.id} entity={entity}/>)}</>
+);
 
 @observer
-class EntityList extends React.Component<{ className?: string, workbench: WorkbenchModel }> {
+class EntityList extends React.Component<{ className?: string; workbench: WorkbenchModel }> {
   render() {
-    const {className, workbench} = this.props!;
+    const {className, workbench} = this.props;
     return (
       <ul className={cx(style.EntityList, 'list-group list-group-flush', className)}>
         <ListItems entities={workbench.graph.entities}/>

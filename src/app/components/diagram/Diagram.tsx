@@ -7,7 +7,7 @@ import cx from "classnames";
 import {DiagramModel} from "./DiagramModel";
 
 @observer
-class Diagram extends React.Component<{ model: DiagramModel, className?: string }> {
+class Diagram extends React.Component<{ model: DiagramModel; className?: string }> {
   render() {
     const {className, model} = this.props;
     const {zoomFactor} = model;

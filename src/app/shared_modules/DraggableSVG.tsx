@@ -12,9 +12,9 @@ interface WithDraggableSVGProps extends React.SVGProps<SVGElement> {
 type WithDraggableSVGState = {
   dragging: boolean;
   offset: {
-    x: number,
-    y: number
-  }
+    x: number;
+    y: number;
+  };
 }
 
 function getPointerPosition(svg, event) {
@@ -75,13 +75,14 @@ const withDraggableSVG = <P extends SVGProps<SVGElement>>(Component: React.Compo
     }
 
     render() {
-      const {onSVGDragStarted, onSVGDrag, onSVGDragEnded, ...wrappedProps} = this.props as any;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const {onSVGDragStarted, onSVGDrag, onSVGDragEnded, ...wrappedProps} = this.props;
       return <Component
         onPointerDown={this.onPointerDown}
         onPointerMove={this.onPointerMove}
         onPointerUp={this.onPointerUpOrLeave}
         onPointerLeave={this.onPointerUpOrLeave}
-        {...wrappedProps}
+        {...wrappedProps as P}
       />  // children are passed in wrapperProps
     }
   };

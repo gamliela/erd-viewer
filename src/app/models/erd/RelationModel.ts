@@ -7,9 +7,9 @@ class RelationModel {
   @serializable(reference(EntityModel)) target: EntityModel;
 
   constructor(props: {
-    id?: number,
-    source?: EntityModel,
-    target?: EntityModel
+    id?: number;
+    source?: EntityModel;
+    target?: EntityModel;
   } = {}) {
     Object.assign(this, props);
   }

@@ -6,7 +6,7 @@ import {EntityList} from "./EntityList";
 import {WorkbenchModel} from "../../models/workbench/WorkbenchModel";
 
 @observer
-class SideBar extends React.Component<{ className?: string, workbench: WorkbenchModel }> {
+class SideBar extends React.Component<{ className?: string; workbench: WorkbenchModel }> {
   render() {
     const {className, workbench} = this.props;
     return (

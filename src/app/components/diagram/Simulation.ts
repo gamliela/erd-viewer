@@ -15,7 +15,7 @@ class SimulationModel {
   private simulation;
   @observable private animationFrameId = 0;
 
-  init(nodes: NodeModel[], links: LinkModel[], startFrozen: boolean = false) {
+  init(nodes: NodeModel[], links: LinkModel[], startFrozen = false) {
     this.simulation = d3.forceSimulation();
     this.simulation
       .nodes(nodes)

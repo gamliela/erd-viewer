@@ -9,9 +9,9 @@ class LinkModel implements SimulationLinkDatum<NodeModel> {
   @serializable(reference(NodeModel)) @observable target: NodeModel;
 
   constructor(props: {
-    id?: number,
-    source?: NodeModel,
-    target?: NodeModel
+    id?: number;
+    source?: NodeModel;
+    target?: NodeModel;
   } = {}) {
     Object.assign(this, props);
   }

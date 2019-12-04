@@ -6,7 +6,7 @@ import SimulationModel from "./Simulation";
 import {GraphModel} from "../../models/erd/GraphModel";
 
 class DiagramModel {
-  @serializable zoomFactor: number = 50;
+  @serializable zoomFactor = 50;
   @serializable(list(object(NodeModel))) @observable nodes: NodeModel[] = [];
   @serializable(list(object(LinkModel))) @observable links: LinkModel[] = [];
 

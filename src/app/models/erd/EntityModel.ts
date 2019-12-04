@@ -5,8 +5,8 @@ class EntityModel {
   @serializable name: string;
 
   constructor(props: {
-    id?: number,
-    name?: string,
+    id?: number;
+    name?: string;
   } = {}) {
     Object.assign(this, props);
   }
