@@ -1,6 +1,6 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import withDraggableSVG from "../../shared_modules/DraggableSVG";
+import withDraggableSVG from "../../../shared_modules/DraggableSVG";
 import style from "./style.scss";
 import {NodeModel} from "./NodeModel";
 
