@@ -4,10 +4,6 @@ import {DotGraph} from "../erd/dot_json_types";
 import {DiagramModel} from "../../components/diagram/DiagramModel";
 import {GraphModel} from "../erd/GraphModel";
 
-// continue:
-// * errors in load should be handled
-// * move all simulation state and other volatile state into components state (?)
-
 class WorkbenchModel {
   @serializable(object(GraphModel)) @observable graph: GraphModel;
   @serializable(object(DiagramModel)) @observable diagram: DiagramModel;
