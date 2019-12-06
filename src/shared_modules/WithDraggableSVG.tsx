@@ -38,6 +38,8 @@ function WithDraggableSVG<P extends SVGProps<SVGElement>>(Component: React.Compo
     const [offset, setOffset] = useState({x: 0, y: 0});
 
     const onPointerDown = useCallback((event) => {
+      event.stopPropagation();
+      event.preventDefault();
       const element = event.target;
       element.setPointerCapture(event.pointerId);
       const offset = getPointerPosition(element, event);
@@ -52,8 +54,9 @@ function WithDraggableSVG<P extends SVGProps<SVGElement>>(Component: React.Compo
 
     const onPointerMove = useCallback((event) => {
       if (dragging) {
-        const element = event.target;
+        event.stopPropagation();
         event.preventDefault();
+        const element = event.target;
         const coord = getPointerPosition(element, event);
         onSVGDrag && onSVGDrag(coord.x - offset.x, coord.y - offset.y);
       }
@@ -61,6 +64,8 @@ function WithDraggableSVG<P extends SVGProps<SVGElement>>(Component: React.Compo
 
     const onPointerUpOrLeave = useCallback(() => {
       if (dragging) {
+        event.stopPropagation();
+        event.preventDefault();
         setDragging(false);
         onSVGDragEnded && onSVGDragEnded();
       }
