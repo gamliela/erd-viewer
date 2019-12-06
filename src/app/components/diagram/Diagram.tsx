@@ -4,7 +4,10 @@ import {Node} from "./Node";
 import {Link} from "./Link";
 import style from "./style.scss";
 import cx from "classnames";
+import WithDraggableViewBox from "../../../shared_modules/WithDraggableViewBox";
 import {DiagramModel} from "./DiagramModel";
+
+const SVG = WithDraggableViewBox("svg");
 
 @observer
 class Diagram extends React.Component<{ model: DiagramModel; className?: string }> {
@@ -14,10 +17,10 @@ class Diagram extends React.Component<{ model: DiagramModel; className?: string 
     const viewBoxProp = `-${zoomFactor / 2} -${zoomFactor / 2} ${zoomFactor} ${zoomFactor}`;
 
     return (
-      <svg className={cx(style.Diagram, className)} viewBox={viewBoxProp}>
+      <SVG className={cx(style.Diagram, className)} viewBox={viewBoxProp}>
         {this.renderNodes()}
         {this.renderLinks()}
-      </svg>
+      </SVG>
     );
   }
 
