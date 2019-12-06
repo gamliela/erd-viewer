@@ -1,5 +1,5 @@
 import * as d3 from "d3-force";
-import {action, computed, observable} from "mobx";
+import {action, computed} from "mobx";
 import {NodeModel} from "./NodeModel";
 import {LinkModel} from "./LinkModel";
 
