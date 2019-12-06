@@ -1,10 +1,10 @@
 import * as React from "react";
 import {observer} from "mobx-react";
-import withDraggableSVG from "../../../shared_modules/DraggableSVG";
+import WithDraggableSVG from "../../../shared_modules/WithDraggableSVG";
 import style from "./style.scss";
 import {NodeModel} from "./NodeModel";
 
-const DraggableGroup = withDraggableSVG("g");
+const DraggableGroup = WithDraggableSVG("g");
 
 @observer
 class Node extends React.Component<{ node: NodeModel }> {
