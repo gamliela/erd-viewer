@@ -39,5 +39,6 @@ module.exports = {
     "react-hooks/rules-of-hooks": "error", // checks rules of Hooks
     "react-hooks/exhaustive-deps": "warn", // checks effect dependencies
     "@typescript-eslint/explicit-function-return-type": "off", // @typescript-eslint has problems to infer render() return types (is there a better way?)
+    "@typescript-eslint/explicit-module-boundary-types": "off", // TODO: fix errors & remove this rule
   },
 };

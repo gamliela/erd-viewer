@@ -1,22 +1,15 @@
-const fs = require('fs');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // paths
 const projectPath = path.resolve(__dirname, '..');
 const buildPath = path.join(projectPath, 'build');
-const dataPath = path.join(projectPath, 'data');
 const srcPath = path.join(projectPath, 'src');
 const appPath = path.join(srcPath, 'app');
 
 const entries = {
   main: path.join(appPath, 'index.tsx')
 };
-
-const erdFilePath = path.join(dataPath, 'erd.dot_json.json');
-if (fs.existsSync(erdFilePath)) {
-  entries.erdFile = erdFilePath;
-}
 
 const config = {
   entry: entries,
